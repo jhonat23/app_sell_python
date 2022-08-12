@@ -1,4 +1,5 @@
 import time
+import sys
 
 clients = 'Pablo, Ricardo'
 
@@ -23,7 +24,10 @@ def update_client(client: str, new_client: str):
 def delete_client(client: str):
     global clients
     if client in clients:
-        clients =  clients.replace(client + ', ', '')
+        if clients.endswith(client):
+            clients =  clients.replace(', ' + client, '')
+        else:
+            clients =  clients.replace(client + ', ', '')
         print(F'THE CLIENT {client} DELETED')
     else:
         print('THE CLIENT IS NOT IN DATA')
@@ -33,7 +37,25 @@ def show_clients():
     print('↓ '* 50)
     print(clients)
     print('↑ '* 50)
-    time.sleep(2.5)
+    time.sleep(1.5)
+
+def find_client(client: str):
+    global clients
+    count = 0
+    client_list = clients.split(', ')
+    for c in client_list:
+        if c != client:
+            count += 1
+            if count == len(client_list):
+                print(f'THE CLIENT {client} IS NOT FOUND!')
+                del(client_list)
+                return False
+            else:
+                continue
+        elif c == client:
+            print(f'THE CLIENT {client} HAS BEEN FOUND!')
+            del(client_list)
+            return True
 
 # private functions
 
@@ -45,7 +67,8 @@ def _start():
     print('1- [C]REATE A CLIENT')
     print('2- [R]READ CLIENT LIST')
     print('3- [U]PDATE A CLIENT')
-    print('4- [D]ELETE A CLIENT')    
+    print('4- [D]ELETE A CLIENT')   
+    print('5- [S]EARCH CLIENT')
     print('[E]XIT')
 
 def _exit():
@@ -58,7 +81,15 @@ def _add_comma_space():#private function (_)
     clients += ', '
 
 def _get_client_name():
-    return input('WHAT IS THE CLIENT NAME: ')
+    client_name = None
+    while not client_name:
+        client_name = input('WHAT IS THE CLIENT NAME: ')
+        if client_name == 'exit':
+            client_name == None
+            break
+    if not client_name:
+        sys.exit()
+    return client_name
 
 #------------------------------------------------------
 if __name__ == '__main__':
@@ -83,6 +114,9 @@ if __name__ == '__main__':
             client_name = _get_client_name()
             delete_client(client_name)
             show_clients()
+        elif command == 'S':
+            client_name = _get_client_name()
+            find_client(client_name)
         elif command == 'E':
             _exit()
             break
