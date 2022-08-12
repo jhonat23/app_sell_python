@@ -1,14 +1,13 @@
 import time
 import sys
 
-clients = 'Pablo, Ricardo'
+clients = ['Pablo', 'Ricardo']
 
 #functions-------------------------------------------
 def create_client(client: str):
     global clients #global is for indicate the use of a global variable into func
     if client not in clients:
-        _add_comma_space()
-        clients += client
+        clients.append(client)
         print('CLIENT SUCCESFULLY ADDED!')
     else:
         print('THIS CLIENT ALREADY EXIST!')
@@ -16,7 +15,8 @@ def create_client(client: str):
 def update_client(client: str, new_client: str):
     global clients
     if client in clients:
-        clients = clients.replace(client, new_client)
+        index = clients.index(client)
+        clients[index] = new_client
         print(F'THE CLIENT {client} UPDATED')
     else:
         print('THE CLIENT IS NOT IN DATA')
@@ -24,37 +24,32 @@ def update_client(client: str, new_client: str):
 def delete_client(client: str):
     global clients
     if client in clients:
-        if clients.endswith(client):
-            clients =  clients.replace(', ' + client, '')
-        else:
-            clients =  clients.replace(client + ', ', '')
+        clients.remove(client)
         print(F'THE CLIENT {client} DELETED')
     else:
         print('THE CLIENT IS NOT IN DATA')
 
 def show_clients():
     global clients
-    print('↓ '* 50)
-    print(clients)
-    print('↑ '* 50)
+    print('↓ '* 10)
+    for i, client in enumerate(clients):
+        print(f'{i + 1}: {client}')
+    print('↑ '* 10)
     time.sleep(1.5)
 
 def find_client(client: str):
     global clients
     count = 0
-    client_list = clients.split(', ')
-    for c in client_list:
+    for c in clients:
         if c != client:
             count += 1
-            if count == len(client_list):
+            if count == len(clients):
                 print(f'THE CLIENT {client} IS NOT FOUND!')
-                del(client_list)
                 return False
             else:
                 continue
         elif c == client:
             print(f'THE CLIENT {client} HAS BEEN FOUND!')
-            del(client_list)
             return True
 
 # private functions
@@ -75,10 +70,6 @@ def _exit():
     print('-#'*50)
     print('↓  '*33)
     print('THANKS FOR USING YODO SUITE')
-
-def _add_comma_space():#private function (_)
-    global clients
-    clients += ', '
 
 def _get_client_name():
     client_name = None
