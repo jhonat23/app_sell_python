@@ -26,23 +26,24 @@ def create_client(client):
         print('THIS CLIENT ALREADY EXIST!')
 
 
-def update_client(client: str, new_client: str):
+def update_client(client_id: str, new_client: dict):
     global clients
-    if client in clients:
-        index = clients.index(client)
-        clients[index] = new_client
-        print(F'THE CLIENT {client} UPDATED')
+    if len(clients) - 1 >= int(client_id):
+        clients[int(client_id)] = new_client
+        print('CLIENT UPDATED')
     else:
-        print('THE CLIENT IS NOT IN DATA')
+        print('CLIENT ID IS NOT IN DATA')
 
 
-def delete_client(client: str):
+def delete_client(client_id: str):
     global clients
-    if client in clients:
-        clients.remove(client)
-        print(F'THE CLIENT {client} DELETED')
-    else:
-        print('THE CLIENT IS NOT IN DATA')
+    if int(client_id) >= len(clients):
+        print('ID IS NOT IN DATA')
+    for i, client in enumerate(clients):
+        if i == int(client_id):
+            print('THE CLIENT WAS DELETED')
+            del clients[i]
+            break
 
 
 def show_clients():
@@ -54,20 +55,18 @@ def show_clients():
     time.sleep(1.5)
 
 
-def find_client(client: str):
+def find_client(client_name: str):
     global clients
     count = 0
-    for c in clients:
-        if c != client:
+    for client in clients:
+        if client['name'] != client_name:
             count += 1
             if count == len(clients):
-                print(f'THE CLIENT {client} IS NOT FOUND!')
-                return False
+                print('THE CLIENT WAS NOT FOUND')
             else:
                 continue
-        elif c == client:
-            print(f'THE CLIENT {client} HAS BEEN FOUND!')
-            return True
+        else:
+            print('THE CLIENT WAS FOUND')
 
 
 # private functions
@@ -108,7 +107,7 @@ def _get_client_field(field_name):
     while not field:
         field = input(F'WHAT IS THE CLIENT {field_name}: ')
     return field
-    
+
 
 #------------------------------------------------------
 if __name__ == '__main__':
@@ -130,13 +129,20 @@ if __name__ == '__main__':
         elif command == 'R':
             show_clients()
         elif command == 'U':
-            client_name = _get_client_name()
-            new_client = input('WHAT IS THE NEW CLIENT NAME: ')
-            update_client(client_name, new_client)
+            print('--CLIENT TO BE REPLACED--')
+            client_id = _get_client_field('ID')
+            print('--NEW CLIENT--')
+            new_client = {
+                'name': _get_client_field('NAME'),
+                'company': _get_client_field('COMPANY'),
+                'email' : _get_client_field('EMAIL'),
+                'position' : _get_client_field('POSITION')
+            }
+            update_client(client_id, new_client)
             show_clients()
         elif command == 'D':
-            client_name = _get_client_name()
-            delete_client(client_name)
+            client_id = _get_client_field('ID')
+            delete_client(client_id)
             show_clients()
         elif command == 'S':
             client_name = _get_client_name()
