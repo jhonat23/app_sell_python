@@ -1,20 +1,27 @@
 import time
 import sys
+import csv
+import os
 
-clients = [
-    {
-        'name': 'Pablo',
-        'company': 'Google',
-        'email': 'pablo@google.com',
-        'position': 'Software Engineer',
-    },
-    {
-        'name': 'Ricardo',
-        'company': 'Facebook',
-        'email': 'ricardo@facebook.com',
-        'position': 'Data Engineer',
-    }
-    ]
+CLIENT_TABLE = '.clients.csv'
+CLIENT_SCHEMA = ['name', 'company', 'email', 'position']
+clients = []
+
+def _initialize_clients_data():
+    with open(CLIENT_TABLE, mode='r') as f:
+        reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA)
+        for row in reader:
+            clients.append(row)
+
+
+def _save_clients():
+    tmp_table_name = '{0}.tmp'.format(CLIENT_TABLE)
+    with open(tmp_table_name, mode='w') as f:
+        writer = csv.DictWriter(f, fieldnames=CLIENT_SCHEMA)
+        writer.writerows(clients)
+        
+        os.remove(CLIENT_TABLE)
+        os.rename(tmp_table_name, CLIENT_TABLE)
 
 #functions-------------------------------------------
 def create_client(client):
@@ -50,7 +57,7 @@ def show_clients():
     global clients
     print('↓ '* 10)
     for i, client in enumerate(clients):
-        print('{0} | {1} | {2} | {3} |'.format(client['name'], client['company'], client['email'], client['position']))
+        print('{0} | {1} | {2} | {3} | {4}'.format(i, client['name'], client['company'], client['email'], client['position']))
     print('↑ '* 10)
     time.sleep(1.5)
 
@@ -111,7 +118,9 @@ def _get_client_field(field_name):
 
 #------------------------------------------------------
 if __name__ == '__main__':
+    _initialize_clients_data()
     while True:
+
         _start()
 
         command = input()
@@ -148,6 +157,7 @@ if __name__ == '__main__':
             client_name = _get_client_name()
             find_client(client_name)
         elif command == 'E':
+            _save_clients()
             _exit()
             break
         else:
