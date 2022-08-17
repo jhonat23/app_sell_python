@@ -1,16 +1,30 @@
 import time
 import sys
 
-clients = ['Pablo', 'Ricardo']
+clients = [
+    {
+        'name': 'Pablo',
+        'company': 'Google',
+        'email': 'pablo@google.com',
+        'position': 'Software Engineer',
+    },
+    {
+        'name': 'Ricardo',
+        'company': 'Facebook',
+        'email': 'ricardo@facebook.com',
+        'position': 'Data Engineer',
+    }
+    ]
 
 #functions-------------------------------------------
-def create_client(client: str):
+def create_client(client):
     global clients #global is for indicate the use of a global variable into func
     if client not in clients:
         clients.append(client)
         print('CLIENT SUCCESFULLY ADDED!')
     else:
         print('THIS CLIENT ALREADY EXIST!')
+
 
 def update_client(client: str, new_client: str):
     global clients
@@ -21,6 +35,7 @@ def update_client(client: str, new_client: str):
     else:
         print('THE CLIENT IS NOT IN DATA')
 
+
 def delete_client(client: str):
     global clients
     if client in clients:
@@ -29,13 +44,15 @@ def delete_client(client: str):
     else:
         print('THE CLIENT IS NOT IN DATA')
 
+
 def show_clients():
     global clients
     print('↓ '* 10)
     for i, client in enumerate(clients):
-        print(f'{i + 1}: {client}')
+        print('{0} | {1} | {2} | {3} |'.format(client['name'], client['company'], client['email'], client['position']))
     print('↑ '* 10)
     time.sleep(1.5)
+
 
 def find_client(client: str):
     global clients
@@ -52,6 +69,7 @@ def find_client(client: str):
             print(f'THE CLIENT {client} HAS BEEN FOUND!')
             return True
 
+
 # private functions
 
 def _start():
@@ -66,10 +84,12 @@ def _start():
     print('5- [S]EARCH CLIENT')
     print('[E]XIT')
 
+
 def _exit():
     print('-#'*50)
     print('↓  '*33)
     print('THANKS FOR USING YODO SUITE')
+
 
 def _get_client_name():
     client_name = None
@@ -82,6 +102,14 @@ def _get_client_name():
         sys.exit()
     return client_name
 
+
+def _get_client_field(field_name):
+    field = None
+    while not field:
+        field = input(F'WHAT IS THE CLIENT {field_name}: ')
+    return field
+    
+
 #------------------------------------------------------
 if __name__ == '__main__':
     while True:
@@ -91,8 +119,13 @@ if __name__ == '__main__':
         command = command.upper()
 
         if command == 'C':
-            client_name = _get_client_name()
-            create_client(client_name)
+            client = {
+                'name': _get_client_field('NAME'),
+                'company': _get_client_field('COMPANY'),
+                'email' : _get_client_field('EMAIL'),
+                'position' : _get_client_field('POSITION')
+            }
+            create_client(client)
             show_clients()
         elif command == 'R':
             show_clients()
