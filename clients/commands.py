@@ -34,12 +34,23 @@ def list_clients(ctx):
     print(tab)
 
 @clients.command()
+@click.argument('client_uid', type=str)
 @click.pass_context
 def update(ctx, client_uid):
     """Updates a client"""
-    pass
+    client_service = ClientService(ctx.obj['clients_table'])
+    clients = client_service.list_clients()
+    client = [client for client in clients if client['uid'] == client_uid]
+
+    if client:
+        client = ClientService._update_client(Client(**client[0]))
+        client_service.update(client)
+        print('Client updated')
+    else:
+        print('Client not found')
 
 @clients.command()
+@click.argument('client_uid', type=str)
 @click.pass_context
 def delete(ctx, client_uid):
     """Deletes a client"""
