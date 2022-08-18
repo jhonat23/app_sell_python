@@ -2,14 +2,14 @@ from setuptools import setup
 
 
 setup(
-    name='pv',
+    name='av',
     version='0.1',
-    py_modules=['pv'],
+    py_modules=['av'],
     install_requires=[
         'Click',
     ],
     entry_points='''
         [console_scripts]
-        pv=pv:cli
+        av=av:cli
     ''',
 )
