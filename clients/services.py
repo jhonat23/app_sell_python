@@ -27,8 +27,19 @@ class ClientService():
                 updated_client.append(client)
             
             self._save_to_disc(updated_client)
+        
+    def delete(self, uid_client: str):
+        list_of_clients = self.list_clients()
+        new_clients = []
+        for client in list_of_clients:
+            if client['uid'] == uid_client:
+                continue
+            else:
+                new_clients.append(client)
+                
+            self._save_to_disc(new_clients)
 
-    def _save_to_disc(self, clients):
+    def _save_to_disc(self, clients: list):
         tmp_table = self.table_name + '.tmp'
         with open(tmp_table, mode='w') as f:
             writer = csv.DictWriter(f,fieldnames=Client.schema())

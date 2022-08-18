@@ -52,8 +52,10 @@ def update(ctx, client_uid):
 @clients.command()
 @click.argument('client_uid', type=str)
 @click.pass_context
-def delete(ctx, client_uid):
+def delete(ctx, client_uid: str):
     """Deletes a client"""
-    pass
+    client_service = ClientService(ctx.obj['clients_table'])
+    if click.confirm('Are you sure you want to delete the client with uid: {}'.format(client_uid)):
+        client_service.delete(client_uid)
 
 all = clients
